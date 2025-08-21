@@ -19,5 +19,9 @@
 - 如果浏览器运行错误请尝试更改config.json的浏览器路径
 - 在没登录情况下所有漫画都会出现 "漫画不存在或已被删除"
 - 如果已经登录有一部分漫画会出现 "漫画不存在或已被删除" 是正常现象
-- 有一部分漫画的id会指向别的漫画,所以添加了通过名称查找
+- <img width="387" height="206" alt="image" src="https://github.com/user-attachments/assets/3cda07c2-d9b5-45bb-abcf-9a1342b96440" />
+- 有一部分漫画的id会指向别的漫画或者id指向不存在,所以添加了通过名称查找
+- <img width="704" height="226" alt="image" src="https://github.com/user-attachments/assets/f94bf3c6-e05e-496d-8979-9a9d49da66a1" />
+- 还有些漫画全名查找不出来添加了通过关键词查找
+- <img width="1165" height="145" alt="image" src="https://github.com/user-attachments/assets/e64e32b6-0779-4bce-bfa5-d9c8038b65db" />
 - 因为是临时自用工具,代码有点屎,可能会出现任何bug
