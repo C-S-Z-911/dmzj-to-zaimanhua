@@ -163,3 +163,7 @@ logs/
 .env.development.local
 .env.test.local
 .env.production.local
+
+# all_subscriptions
+all_subscriptions/*
+!all_subscriptions/
