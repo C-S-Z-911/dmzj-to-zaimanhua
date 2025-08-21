@@ -35,28 +35,60 @@ logging.getLogger().handlers = []
 logging.getLogger().setLevel(logging.INFO)
 
 # 读取配置文件
-try:
-    with open('config.json', 'r', encoding='utf-8') as file:
-        config = json.load(file)
-        browser_path = config["browser_path"]
-        wait_load = config["wait_load"]
-        zaimanhua_url = config["zaimanhua_url"]
-except FileNotFoundError as e:
-    logger.error(f"config.json文件未找到: {e}")
-except Exception as e:
-    logger.error(f"config.json文件读取错误: {e}")
+import json
+import sys
 
-# 配置options
+
+# 配置读取和浏览器初始化分离，提高可读性
+def load_config():
+    """加载配置文件并返回配置字典"""
+    try:
+        with open('config.json', 'r', encoding='utf-8') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        logger.error("config.json文件未找到，请确保配置文件存在")
+        sys.exit(1)
+    except json.JSONDecodeError:
+        logger.error("config.json格式错误，请检查JSON格式")
+        sys.exit(1)
+    except Exception as e:
+        logger.error(f"读取配置文件时发生未知错误: {e}")
+        sys.exit(1)
+
+
+def setup_browser(browser_path):
+    """设置浏览器选项并返回页面对象"""
+    try:
+        options = ChromiumOptions()
+        options.set_browser_path(browser_path)
+        return ChromiumPage(addr_or_opts=options)
+    except FileNotFoundError:
+        logger.error(f"未找到浏览器路径: {browser_path}，请检查路径是否正确")
+        sys.exit(1)
+    except Exception as e:
+        logger.error(f"浏览器初始化失败: {e}")
+        sys.exit(1)
+
+# 主流程
 try:
-    options = ChromiumOptions()
-    options.set_browser_path(browser_path)
-    page = ChromiumPage(addr_or_opts=options)
-except FileNotFoundError as e:
-    logger.error(f"未找到浏览器: {e}")
-    sys.exit()
+    # 加载配置
+    config = load_config()
+    browser_path = config["browser_path"]
+    wait_load = config["wait_load"]
+    zaimanhua_url = config["zaimanhua_url"]
+
+    # 初始化浏览器
+    page = setup_browser(browser_path)
+
+except KeyError as e:
+    logger.error(f"配置文件中缺少必要字段: {e}")
+    sys.exit(1)
+except SystemExit:
+    # 已经处理过的错误，直接退出
+    pass
 except Exception as e:
-    logger.error(f"浏览器配置错误: {e}")
-    sys.exit()
+    logger.error(f"程序初始化失败: {e}")
+    sys.exit(1)
 
 not_found = []
 been_removed = []
